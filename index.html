@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Online Quiz Application</title>
+<style>
+body{margin:0;font-family:Arial;background:linear-gradient(135deg,#74ebd5,#9face6);}
+.container{max-width:800px;margin:30px auto;background:#fff;padding:20px;border-radius:15px;box-shadow:0 5px 20px rgba(0,0,0,.2)}
+h1,h2{text-align:center}
+#quiz,#result{display:none}
+.btn{background:#4CAF50;color:#fff;border:none;padding:12px 20px;border-radius:8px;cursor:pointer;font-size:16px}
+.option{padding:10px;margin:10px 0;background:#eee;border-radius:8px;cursor:pointer}
+.option:hover{background:#cfe8ff}
+.selected{background:#4CAF50;color:#fff}
+#timer,#progress{text-align:right;font-weight:bold}
+</style></head>
+<body><div class="container">
+<div id="start">
+<h1>ONLINE QUIZ APPLICATION</h1>
+<p><b>Welcome!</b></p>
+<input id="name" placeholder="Enter your name" style="width:100%;padding:10px"><br><br>
+<ul>
+<li>10 Questions</li><li>30 seconds each</li><li>No negative marking</li>
+</ul><center><button class="btn" onclick="startQuiz()">Start Quiz</button></center>
+</div>
+<div id="quiz">
+<div id="progress"></div><div id="timer"></div>
+<h2 id="question"></h2><div id="options"></div>
+<center><button class="btn" onclick="nextQuestion()">Next</button></center>
+</div>
+<div id="result">
+<h1>Quiz Completed!</h1>
+<h2 id="welcome"></h2>
+<h2 id="score"></h2>
+<h2 id="percent"></h2>
+<h2 id="grade"></h2>
+<center><button class="btn" onclick="location.reload()">Restart</button></center>
+</div></div>
+<script>
+const questions=[
+{q:"What is Java?",o:["Programming Language","OS","Browser","Database"],a:0},
+{q:"OOP stands for?",o:["Object Oriented Programming","Open OS","Output","None"],a:0},
+{q:"Which class takes input?",o:["Scanner","Math","String","System"],a:0},
+{q:"Array index starts from?",o:["1","0","2","-1"],a:1},
+{q:"Which hides data?",o:["Inheritance","Encapsulation","Poly","Abstract"],a:1},
+{q:"Constructor name?",o:["Any","Same as class","Main","Object"],a:1},
+{q:"String compare method?",o:["==","equals()","match","check"],a:1},
+{q:"Keyword to create object?",o:["make","new","class","object"],a:1},
+{q:"do while executes?",o:["0","1","Many","Never"],a:1},
+{q:"Java is?",o:["Compiled","Interpreted","Both","None"],a:2}
+];
+let cur=0,score=0,sel=-1,t,time=30;
+function startQuiz(){
+if(document.getElementById("name").value==""){alert("Enter name");return;}
+start.style.display="none";quiz.style.display="block";loadQ();}
+function loadQ(){
+sel=-1;progress.innerHTML="Question "+(cur+1)+"/"+questions.length;
+question.innerHTML=questions[cur].q;
+let s="";
+questions[cur].o.forEach((x,i)=>s+=`<div class='option' onclick='pick(${i},this)'>${x}</div>`);
+options.innerHTML=s;startTimer();}
+function pick(i,e){
+sel=i;document.querySelectorAll(".option").forEach(x=>x.classList.remove("selected"));
+e.classList.add("selected");}
+function nextQuestion(){
+clearInterval(t);if(sel==questions[cur].a)score++;
+cur++;if(cur==questions.length){showResult();return;}loadQ();}
+function startTimer(){
+time=30;timer.innerHTML="Time: "+time;
+t=setInterval(()=>{time--;timer.innerHTML="Time: "+time;
+if(time==0){clearInterval(t);cur++;if(cur==questions.length)showResult();else loadQ();}},1000);}
+function showResult(){
+quiz.style.display="none";result.style.display="block";
+let p=score*100/questions.length;
+welcome.innerHTML="Student: "+document.getElementById("name").value;
+document.getElementById("score").innerHTML="Score: "+score+"/"+questions.length;
+percent.innerHTML="Percentage: "+p+"%";
+let g="Needs Improvement";if(p>=80)g="Excellent";else if(p>=60)g="Good";else if(p>=40)g="Average";
+grade.innerHTML="Grade: "+g;}
+</script></body></html>
